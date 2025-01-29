@@ -274,7 +274,7 @@
     </style>
 </head>
 <body> 
-    <nav class="navbar">
+    <nav class="navbar"> 
         <div class="nav-container">
             <div class="logo">
                 <h2>Lyra AI</h2>
@@ -285,6 +285,7 @@
                 <div class="bar"></div>
             </div>
             <ul class="nav-links">
+                <button class="menu-close-btn">X</button>
                 <li class="dropdown">
                     <a href="#team">Our Team ▾</a>
                     <div class="dropdown-content">
@@ -302,7 +303,6 @@
             .navbar {
                 padding: 1rem;
                 background-color: var(--primary-color);
-
                 position: fixed;
                 width: 100%;
                 top: 0;
@@ -328,7 +328,51 @@
                 margin: 5px 0;
                 transition: 0.4s;
                 background: var(--background-light);
+            }
 
+            .menu-close-btn {
+                display: none;
+                padding: 0.5rem 1rem;
+                margin-bottom: 1rem;
+                background-color: var(--background-light);
+                color: var(--primary-color);
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+
+            .menu-close-btn:hover {
+                background-color: #fff;
+                transform: scale(1.05);
+            }
+
+            .dropdown {
+                position: relative;
+            }
+
+            .dropdown-content {
+                display: none;
+                gap: 1rem;
+                position: absolute;
+                background-color: var(--primary-color);
+                min-width: 500px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, 0);
+                padding: 0.5rem;
+                border-radius: 5px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: flex;
+            }
+
+            .dropdown-content a {
+                flex: 1;
+                text-align: center;
+                white-space: nowrap;
             }
 
             @media (max-width: 768px) {
@@ -338,31 +382,79 @@
                 }
 
                 .nav-links {
-                    display: none;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    width: 100%;
-                    padding: 1rem;
+                    display: flex;
+                    position: fixed;
+                    top: 0;
+                    right: -250px; /* Start off-screen */
+                    width: 250px;
+                    height: 100vh;
+                    padding: 4rem 1rem 1rem;
                     flex-direction: column;
                     align-items: center;
                     background-color: var(--primary-color);
+                    transition: right 0.3s ease;
                 }
 
                 .nav-links.active {
-                    display: flex;
+                    right: 0;
+                }
+
+                .menu-close-btn {
+                    display: block;
                 }
 
                 .dropdown-content {
                     position: static;
                     width: 100%;
+                    min-width: unset;
+                    flex-direction: column;
+                    gap: 0.5rem;
                     box-shadow: none;
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.3s ease;
+                    transform: none;
+                    left: 0;
+                }
+
+                .dropdown:hover .dropdown-content {
+                    max-height: 200px;
                 }
             }
         </style>
         <script>
-            document.querySelector('.burger-menu').addEventListener('click', function() {
-                document.querySelector('.nav-links').classList.toggle('active');
+            const navLinks = document.querySelector('.nav-links');
+            const burgerMenu = document.querySelector('.burger-menu');
+            const menuCloseBtn = document.querySelector('.menu-close-btn');
+
+            // Function to close menu
+            function closeMenu() {
+                navLinks.classList.remove('active');
+            }
+
+            // Function to open menu
+            function openMenu() {
+                navLinks.classList.add('active');
+            }
+
+            // Burger menu click handler
+            burgerMenu.addEventListener('click', openMenu);
+
+            // Close button click handler
+            menuCloseBtn.addEventListener('click', closeMenu);
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!navLinks.contains(event.target) && !burgerMenu.contains(event.target)) {
+                    closeMenu();
+                }
+            });
+
+            // Close menu with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+                    closeMenu();
+                }
             });
         </script>
     </nav>
